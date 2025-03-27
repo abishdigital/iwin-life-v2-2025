@@ -1,14 +1,14 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-    // NOTE: Update this to include the paths to all of your component files.
-    content: ["./app/**/*.{js,jsx,ts,tsx}"],
-    presets: [require("nativewind/preset")],
-    theme: {
-        extend: {
-            colors: {
-                primary: '#FF0000'
-            }
+export const content = ["./app/**/*.{js,jsx,ts,tsx}"];
+export const presets = [require("nativewind/preset")];
+export const theme = {
+    extend: {
+        colors: {
+            primary: '#FF0000'
         },
+        fontFamily: {
+            vigaRegular: ["Viga-Regular"]
+        }
     },
-    plugins: [],
-}
+};
+export const plugins = [];
