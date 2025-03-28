@@ -1,108 +1,132 @@
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react';
+import { ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import { images } from '@/constants/images';
 import { icons } from '@/constants/icons';
 import SearchBar from '@/components/searchBar';
-
-const events = [
-    {
-        id: 1,
-        name: "Sample Event",
-        startTime: "2025-04-15T18:00:00",
-        endTime: "2025-04-15T20:00:00",
-        imageURL: "https://via.placeholder.com/150",
-        details: "This is a sample event.",
-    },
-    {
-        id: 2,
-        name: "Another Event",
-        startTime: "2025-05-01T14:00:00",
-        endTime: "2025-05-01T16:00:00",
-        imageURL: null,
-        details: "Event details go here.",
-    },
-    {
-        id: 2,
-        name: "Another Event",
-        startTime: "2025-05-01T14:00:00",
-        endTime: "2025-05-01T16:00:00",
-        imageURL: null,
-        details: "Event details go here.",
-    },
-    {
-        id: 2,
-        name: "Another Event",
-        startTime: "2025-05-01T14:00:00",
-        endTime: "2025-05-01T16:00:00",
-        imageURL: null,
-        details: "Event details go here.",
-    },
-    {
-        id: 2,
-        name: "Another Event",
-        startTime: "2025-05-01T14:00:00",
-        endTime: "2025-05-01T16:00:00",
-        imageURL: null,
-        details: "Event details go here.",
-    },
-];
+import { useFetchEvents } from '@/hooks/useFetchEvents';
 
 const Events = () => {
 
-    const [selectedEvent, setSelectedEvent] = useState<any>(null);
+    const { width } = useWindowDimensions();
 
-    const showModal = (event: any) => {
-        setSelectedEvent(event);
-        alert(`Event Selected: ${event.name}`);
+    const dynamicStyles = {
+        mainImage: {
+            width: width > 768 ? 130 : 110,
+            height: width > 768 ? 100 : 80,
+        },
+        titleText: {
+            fontSize: width > 768 ? 25 : 21,
+        },
+        dateText: {
+            fontSize: width > 768 ? 20 : 18,
+        },
+        descriptionText: {
+            fontSize: width > 768 ? 18 : 16,
+        },
+    }
+
+    const [pageCount, setPageCount] = useState<number>(1);
+    const [limitCount] = useState<number>(10);
+    const [allEvents, setAllEvents] = useState<any[]>([]);
+    const { getEvents, events, loading, error } = useFetchEvents();
+
+    const day = (dateString: string) => {
+        const date = new Date(dateString);
+        return date.getDate().toString().padStart(2, '0');
+    };
+
+    const month = (dateString: string) => {
+        const date = new Date(dateString);
+        return date.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+    };
+
+    const formatDate = (isoString: string): string => {
+        const date = new Date(isoString);
+        return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(date);
+    };
+
+    useEffect(() => {
+        getEvents({ pageCount, limitCount });
+    }, [pageCount]);
+
+    useEffect(() => {
+        if (events.length > 0) {
+            setAllEvents(prevEvents => [...prevEvents, ...events]);
+        }
+    }, [events]);
+
+    if (loading && pageCount === 1) {
+        return <ActivityIndicator size="large" color="#0000ff" />;
+    }
+
+    if (error) {
+        return <Text>Failed to load events.</Text>;
+    }
+
+    const loadMoreEvents = () => {
+        if (!loading) {
+            setPageCount(prevPage => prevPage + 1);
+        }
     };
 
     return (
         <View className='flex-1'>
-            <View className='flex-row items-center gap-2 bg-black px-3.5 py-3  w-full' >
-                <Image source={images.logo} style={styles.logo} className='cursor-pointer'></Image>
+            <View className='flex-row items-center gap-2 bg-black px-3.5 py-3 w-full'>
+                <Image source={images.logo} style={styles.logo} className='cursor-pointer' />
                 <SearchBar />
-                <Image source={icons.filter} className='cursor-pointer'></Image>
+                <Image source={icons.filter} className='cursor-pointer' />
             </View>
-            <ScrollView className='flex-1 px-4  mt-5'
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{
-                    minHeight: "100%"
-                }}>
-                {events.map((item, index) => (
-                    <TouchableOpacity
-                        key={index}
-                        onPress={() => showModal(item)}
-                        className="bg-gray-800 p-4 rounded-lg mb-4"
-                    >
-                        <View className="flex-row">
-                            <View className="items-center mr-3">
-                                <Image source={images.notFound} style={styles.mainImage} className='rounded-2xl'/>
-                            </View>
-                            <View className="mt-4">
-                                <Text className="text-white text-lg font-bold">{item.name}</Text>
-                                <Text className="text-gray-400 text-sm">
-                                    {new Date(item.startTime).toLocaleDateString("en-US")} -{" "}
-                                    {new Date(item.endTime).toLocaleDateString("en-US")}
+
+            <FlatList
+                className="p-4"
+                data={allEvents}
+                keyExtractor={(item) => item.id?.toString() || Math.random().toString()}
+                renderItem={({ item }) => (
+                    <TouchableOpacity className="mb-4 border-2 border-gray-500 rounded-lg p-2.5 cursor-pointer">
+                        <View className="flex-row items-center gap-3">
+
+                            <Image
+                                source={item.imageURL ? { uri: item.imageURL } : images.notFound}
+                                style={dynamicStyles.mainImage}
+                                defaultSource={images.notFound}
+                                className="rounded-md"
+                            />
+
+                            <View className="flex-1">
+                                <Text className="font-viga" style={dynamicStyles.titleText} numberOfLines={1} ellipsizeMode="tail">
+                                    {item.name}
                                 </Text>
-                                <Text className="text-white text-sm">{item.details}</Text>
+                                <View className='flex-row items-center'>
+                                    <Image defaultSource={images.calendarIcon} style={styles.calendarIcon}></Image>
+                                    <Text className="text-grayCustom font-viga" style={dynamicStyles.dateText} numberOfLines={1} ellipsizeMode="tail">
+                                        {(item.startTime || item.date) && formatDate(item.startTime ?? item.date)} - {(item.endTime || item.date) && formatDate(item.endTime ?? item.date)}
+                                    </Text>
+                                </View>
+                                <Text className="text-grayLightCustom font-viga" style={dynamicStyles.descriptionText} numberOfLines={2} ellipsizeMode="tail">
+                                    {item.details}
+                                </Text>
                             </View>
+
                         </View>
                     </TouchableOpacity>
-                ))}
-            </ScrollView>
+                )}
+                onEndReached={loadMoreEvents}
+                onEndReachedThreshold={0.5}
+                ListFooterComponent={loading ? <ActivityIndicator size="large" color="white" /> : null}
+            />
         </View>
-    )
-}
+    );
+};
 
-export default Events
+export default Events;
 
 const styles = StyleSheet.create({
     logo: {
         width: 60,
         height: 60,
     },
-    mainImage: {
-        width: 120,
-        height: 120
+    calendarIcon: {
+        width: 20,
+        height: 20
     }
-})
+});
