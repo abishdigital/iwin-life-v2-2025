@@ -4,6 +4,7 @@ import { images } from '@/constants/images';
 import { icons } from '@/constants/icons';
 import SearchBar from '@/components/searchBar';
 import { useFetchEvents } from '@/hooks/useFetchEvents';
+import EventModal from '@/components/eventModal';
 
 const Events = () => {
 
@@ -29,6 +30,8 @@ const Events = () => {
     const [limitCount] = useState<number>(10);
     const [allEvents, setAllEvents] = useState<any[]>([]);
     const { getEvents, events, loading, error } = useFetchEvents();
+    const [isModalVisible, setModalVisible] = useState<boolean>(false);
+    const [selectedEvent, setSelectedEvent] = useState<any>(null);
 
     const day = (dateString: string) => {
         const date = new Date(dateString);
@@ -69,6 +72,16 @@ const Events = () => {
         }
     };
 
+    const openModal = (event: any) => {
+        setSelectedEvent(event);
+        setModalVisible(true);
+    };
+
+    const closeModal = () => {
+        setSelectedEvent(null);
+        setModalVisible(false);
+    };
+
     return (
         <View className='flex-1'>
             <View className='flex-row items-center gap-2 bg-black px-3.5 py-3 w-full'>
@@ -82,7 +95,7 @@ const Events = () => {
                 data={allEvents}
                 keyExtractor={(item) => item.id?.toString() || Math.random().toString()}
                 renderItem={({ item }) => (
-                    <TouchableOpacity className="mb-4 border-2 border-gray-500 rounded-lg p-2.5 cursor-pointer">
+                    <TouchableOpacity className="mb-4 border-2 border-gray-500 rounded-lg p-2.5 cursor-pointer" onPress={() => openModal(item)}>
                         <View className="flex-row items-center gap-3">
 
                             <Image
@@ -114,6 +127,8 @@ const Events = () => {
                 onEndReachedThreshold={0.5}
                 ListFooterComponent={loading ? <ActivityIndicator size="large" color="white" /> : null}
             />
+
+            <EventModal isVisible={isModalVisible} onClose={closeModal} event={selectedEvent}/>
         </View>
     );
 };
