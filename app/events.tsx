@@ -1,4 +1,4 @@
-import { ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
+import { ActivityIndicator, FlatList, Image, StyleSheet, Text, Pressable, useWindowDimensions, View } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { images } from '@/constants/images';
 import { icons } from '@/constants/icons';
@@ -95,7 +95,7 @@ const Events = () => {
                 data={allEvents}
                 keyExtractor={(item) => item.id?.toString() || Math.random().toString()}
                 renderItem={({ item }) => (
-                    <TouchableOpacity className="mb-4 border-2 border-gray-500 rounded-lg p-2.5 cursor-pointer" onPress={() => openModal(item)}>
+                    <Pressable className="mb-4 border-2 border-gray-500 rounded-lg p-2.5 cursor-pointer" onPress={() => openModal(item)}>
                         <View className="flex-row items-center gap-3">
 
                             <Image
@@ -121,7 +121,7 @@ const Events = () => {
                             </View>
 
                         </View>
-                    </TouchableOpacity>
+                    </Pressable>
                 )}
                 onEndReached={loadMoreEvents}
                 onEndReachedThreshold={0.5}

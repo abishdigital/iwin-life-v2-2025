@@ -1,4 +1,4 @@
-import { Image, Modal, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { Image, Modal, StyleSheet, Text, Pressable, View } from 'react-native'
 import React from 'react'
 import { images } from '@/constants/images';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -26,15 +26,15 @@ const EventModal: React.FC<EventModalProps> = ({ isVisible, onClose, event }) =>
 
     return (
         <Modal visible={isVisible} onRequestClose={onClose} transparent animationType="slide" className="m-0 flex items-center justify-center">
-            <TouchableWithoutFeedback onPress={onClose}>
+            <Pressable onPress={onClose}>
                 <View className=" flex-1 justify-center items-center bg-black/50">
-                    <TouchableWithoutFeedback>
+                    <Pressable>
                         <View className="bg-white p-5 rounded-lg" style={styles.modalContent}>
                             <View className='flex-row items-center justify-between'>
                                 <Text className="font-viga w-full">Event Details</Text>
-                                <TouchableWithoutFeedback onPress={onClose}>
+                                <Pressable onPress={onClose}>
                                     <Icon name="close" size={20} color="black" className='cursor-pointer' />
-                                </TouchableWithoutFeedback>
+                                </Pressable>
                             </View>
                             <View style={styles.imageContainer}>
                                 <Image defaultSource={images.notFound} source={event?.imageURL} style={styles.mainImage}></Image>
@@ -55,9 +55,9 @@ const EventModal: React.FC<EventModalProps> = ({ isVisible, onClose, event }) =>
                             <Text className="text-grayCustom font-bold font-viga" style={styles.mt5}>Keywords</Text>
                             <Text className="text-grayLightCustom font-viga" style={styles.mt3}>{getKeywords(event?.name)}</Text>
                         </View>
-                    </TouchableWithoutFeedback>
+                    </Pressable>
                 </View>
-            </TouchableWithoutFeedback>
+            </Pressable>
         </Modal>
     )
 }
