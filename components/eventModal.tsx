@@ -27,9 +27,9 @@ const EventModal: React.FC<EventModalProps> = ({ isVisible, onClose, event }) =>
     return (
         <Modal visible={isVisible} onRequestClose={onClose} transparent animationType="slide" className="m-0 flex items-center justify-center">
             <Pressable onPress={onClose}>
-                <View className=" flex-1 justify-center items-center bg-black/50">
+                <View className="modalContainer">
                     <Pressable>
-                        <View className="bg-white p-5 rounded-lg" style={styles.modalContent}>
+                        <View className="mx-auto bg-white p-5 rounded-lg" style={styles.modalContent}>
                             <View className='flex-row items-center justify-between'>
                                 <Text className="font-viga w-full">Event Details</Text>
                                 <Pressable onPress={onClose}>
@@ -66,8 +66,9 @@ export default EventModal
 
 const styles = StyleSheet.create({
     modalContent: {
-        width:'100%',
-        maxWidth: 500
+        width: '100%',
+        maxWidth: 500,
+        backgroundColor: 'red'
     },
     imageContainer: {
         width: '100%',
