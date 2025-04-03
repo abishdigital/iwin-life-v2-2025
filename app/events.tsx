@@ -1,4 +1,4 @@
-import { ActivityIndicator, FlatList, Image, StyleSheet, Text, Pressable, useWindowDimensions, View } from 'react-native';
+import { ActivityIndicator, FlatList, Image, StyleSheet, Text, Pressable, useWindowDimensions, View, useColorScheme } from 'react-native';
 import React, { useState, useEffect, Fragment } from 'react';
 import { images } from '@/constants/images';
 import { icons } from '@/constants/icons';
@@ -9,6 +9,8 @@ import EventModal from '@/components/eventModal';
 const Events = () => {
 
     const { width } = useWindowDimensions();
+    const colorScheme = useColorScheme();
+    const isDarkMode = colorScheme === 'dark';
 
     const dynamicStyles = {
         mainImage: {
@@ -58,14 +60,6 @@ const Events = () => {
         }
     }, [events]);
 
-    if (loading && pageCount === 1) {
-        return <ActivityIndicator size="large" color="#0000ff" />;
-    }
-
-    if (error) {
-        return <Text>Failed to load events.</Text>;
-    }
-
     const loadMoreEvents = () => {
         if (!loading) {
             setPageCount(prevPage => prevPage + 1);
@@ -84,7 +78,7 @@ const Events = () => {
 
     return (
         <Fragment>
-            <View className='flex-1'>
+            <View className={`flex-1 ${isDarkMode ? 'bg-black' : 'bg-white'}`}>
                 <View className='flex-row items-center gap-2 bg-black px-3.5 py-3 w-full'>
                     <Image source={images.logo} style={styles.logo} className='cursor-pointer' />
                     <SearchBar />
@@ -107,7 +101,7 @@ const Events = () => {
                                 />
 
                                 <View className="flex-1">
-                                    <Text className="font-viga" style={dynamicStyles.titleText} numberOfLines={1} ellipsizeMode="tail">
+                                    <Text className={`font-viga ${isDarkMode ? 'text-white' : 'text-black'}`} style={dynamicStyles.titleText} numberOfLines={1} ellipsizeMode="tail">
                                         {item.name}
                                     </Text>
                                     <View className='flex-row items-center'>
