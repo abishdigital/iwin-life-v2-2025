@@ -5,6 +5,7 @@ import { icons } from '@/constants/icons';
 import SearchBar from '@/components/searchBar';
 import { useFetchEvents } from '@/hooks/useFetchEvents';
 import EventModal from '@/components/eventModal';
+import { DarkTheme } from '@react-navigation/native';
 
 const Events = () => {
 
@@ -79,10 +80,10 @@ const Events = () => {
     return (
         <Fragment>
             <View className={`flex-1 ${isDarkMode ? 'bg-black' : 'bg-white'}`}>
-                <View className='flex-row items-center gap-2 bg-black px-3.5 py-3 w-full'>
-                    <Image source={images.logo} style={styles.logo} className='cursor-pointer' />
+                <View className={`flex-row items-center gap-2 ${isDarkMode ? 'bg-black' : 'bg-white'} px-3.5 py-3 w-full`}>
+                    <Image source={images.logo} style={styles.logo} className={`cursor-pointer`} />
                     <SearchBar />
-                    <Image source={icons.filter} className='cursor-pointer' />
+                    <Image source={icons.filter} className={`cursor-pointer ${!isDarkMode && 'invert'}`} />
                 </View>
 
                 <FlatList
@@ -90,7 +91,7 @@ const Events = () => {
                     data={allEvents}
                     keyExtractor={(item) => item.id?.toString() || Math.random().toString()}
                     renderItem={({ item }) => (
-                        <Pressable className="mb-4 border-2 border-gray-500 rounded-lg p-2.5 cursor-pointer" onPress={() => openModal(item)}>
+                        <Pressable className="mb-4 border-2 border-white rounded-lg p-2.5 cursor-pointer shadow-cardBoxShadow" onPress={() => openModal(item)}>
                             <View className="flex-row items-center gap-3">
 
                                 <Image
