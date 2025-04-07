@@ -5,7 +5,7 @@ import { icons } from '@/constants/icons';
 import SearchBar from '@/components/searchBar';
 import { useFetchEvents } from '@/hooks/useFetchEvents';
 import EventModal from '@/components/eventModal';
-import { DarkTheme } from '@react-navigation/native';
+import BigCalendar from '@/components/bigCalendar';
 
 const Events = () => {
 
@@ -34,6 +34,7 @@ const Events = () => {
     const [allEvents, setAllEvents] = useState<any[]>([]);
     const { getEvents, events, loading, error } = useFetchEvents();
     const [isModalVisible, setModalVisible] = useState<boolean>(false);
+    const [isModalVisible2, setModalVisible2] = useState<boolean>(false);
     const [selectedEvent, setSelectedEvent] = useState<any>(null);
 
     const day = (dateString: string) => {
@@ -77,13 +78,23 @@ const Events = () => {
         setModalVisible(false);
     };
 
+    const openModal2 = () => {
+        setModalVisible2(true);
+    };
+
+    const closeModal2 = () => {
+        setModalVisible2(false);
+    };
+
     return (
         <Fragment>
             <View className={`flex-1 ${isDarkMode ? 'bg-black' : 'bg-white'}`}>
                 <View className={`flex-row items-center gap-2 ${isDarkMode ? 'bg-black' : 'bg-white'} px-3.5 py-3 w-full`}>
                     <Image source={images.logo} style={styles.logo} className={`cursor-pointer`} />
                     <SearchBar />
-                    <Image source={icons.filter} className={`cursor-pointer ${!isDarkMode && 'invert'}`} />
+                    <Pressable onPress={() => openModal2()}>
+                        <Image source={icons.filter} className={`cursor-pointer ${!isDarkMode && 'invert'}`} />
+                    </Pressable>
                 </View>
 
                 <FlatList
@@ -126,6 +137,7 @@ const Events = () => {
             </View>
 
             <EventModal isVisible={isModalVisible} onClose={closeModal} event={selectedEvent} />
+            <BigCalendar isVisible={isModalVisible2} onClose={closeModal2} events={events} />
         </Fragment>
     );
 };

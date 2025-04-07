@@ -65,7 +65,7 @@ const EventModal: React.FC<EventModalProps> = ({ isVisible, onClose, event }) =>
     )
 }
 
-export default EventModal
+export default EventModal;
 
 const styles = StyleSheet.create({
     modalContent: {
@@ -91,4 +91,4 @@ const styles = StyleSheet.create({
     mt3: {
         marginTop: 3
     }
-})
+});

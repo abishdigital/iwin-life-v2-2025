@@ -1,7 +1,6 @@
 import { Image, StyleSheet, TextInput, useColorScheme, View } from 'react-native'
 import React, { useState } from 'react'
 import { icons } from '@/constants/icons';
-import '../app/globals.css';
 
 const SearchBar = () => {
 
@@ -23,7 +22,6 @@ const SearchBar = () => {
     )
 }
 
-export default SearchBar
+export default SearchBar;
 
-const styles = StyleSheet.create({
-})
+const styles = StyleSheet.create({});
