@@ -6,7 +6,11 @@ export default function HomePage() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace('/events');
+    const timeout = setTimeout(() => {
+      router.push('/events');
+    }, 0);
+
+    return () => clearTimeout(timeout);
   }, []);
 
   return (
